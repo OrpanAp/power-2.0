@@ -27,7 +27,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 
 <table>
 <tr>
-<td width="50%" valign="top" padding="1rem">
+<td width="50%" valign="top" padding-inline="2rem">
 
 ### 🧱 Application foundation
 
