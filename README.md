@@ -29,7 +29,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 <tr>
 <td width="50%" valign="top">
 
-### 🧱 Application foundation
+## 🧱 Application foundation
 
 - HTTP routing and middleware
 - Controllers, models, and views
@@ -40,7 +40,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 </td>
 <td width="50%" valign="top">
 
-### 🔐 Authentication & security
+## 🔐 Authentication & security
 
 - Password hashing and server-side sessions
 - Roles and administrator tools
@@ -53,7 +53,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 <tr>
 <td width="50%" valign="top">
 
-### 🗄️ Database tools
+## 🗄️ Database tools
 
 - SQLite for local development
 - Connection URL formats for PostgreSQL, MySQL, and MariaDB
@@ -63,7 +63,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 </td>
 <td width="50%" valign="top">
 
-### 🎤 Built-in experiences
+## 🎤 Built-in experiences
 
 - Command-line developer tools
 - Documentation and interactive demos
