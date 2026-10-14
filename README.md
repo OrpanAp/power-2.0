@@ -25,9 +25,9 @@ P.O.W.E.R. is a **zero-runtime-dependency Node.js web framework** designed to br
 
 Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node.js built-ins and gives you a structured foundation to explore, learn, and build on.
 
-<table padding="1rem">
+<table>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" padding="1rem">
 
 ### 🧱 Application foundation
 
@@ -38,7 +38,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 - Database migrations and seed data
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" padding="1rem">
 
 ### 🔐 Authentication & security
 
@@ -51,7 +51,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" padding="1rem">
 
 ### 🗄️ Database tools
 
@@ -61,7 +61,7 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 - Database status and configuration diagnostics
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" padding="1rem">
 
 ### 🎤 Built-in experiences
 
