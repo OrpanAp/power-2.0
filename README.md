@@ -30,6 +30,8 @@ Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node
 | 🗄️ **Database tools** | SQLite for local development · Connection URL formats for PostgreSQL, MySQL, and MariaDB · Named database connections · Database status and configuration diagnostics |
 | 🎤 **Built-in experiences** | Command-line developer tools · Documentation and interactive demos · Development live reload · Live Markdown presentations with audience updates over SSE |
 
+<a id="-get-started"></a>
+
 **✨ Get started**
 
 **Requirements**
@@ -86,6 +88,8 @@ Need help with commands? Run:
 ```bash
 node bin/power-cli.js help
 ```
+
+<a id="-what-you-get"></a>
 
 **🧰 What you get**
 
@@ -170,6 +174,8 @@ Presentation state is stored in memory for a single running process. It returns 
 | `npm test` | Run the test suite |
 
 Use the CLI help output as the source of truth for your checked-out version.
+
+<a id="-documentation--demos"></a>
 
 **📚 Documentation & demos**
 
