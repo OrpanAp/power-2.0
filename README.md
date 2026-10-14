@@ -26,52 +26,48 @@ P.O.W.E.R. is a **zero-runtime-dependency Node.js web framework** designed to br
 Instead of starting with a large stack of runtime packages, P.O.W.E.R. uses Node.js built-ins and gives you a structured foundation to explore, learn, and build on.
 
 <table>
-<tr>
-<td width="50%" valign="top" padding-inline="2rem">
-
-### 🧱 Application foundation
-
-- HTTP routing and middleware
-- Controllers, models, and views
-- Layouts and reusable template parts
-- Input parsing and validation
-- Database migrations and seed data
-
-</td>
-<td width="50%" valign="top" padding="1rem">
-
-### 🔐 Authentication & security
-
-- Password hashing and server-side sessions
-- Roles and administrator tools
-- Optional TOTP two-factor authentication
-- CSRF and Origin checks
-- Security headers, rate limits, and SQL protections
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top" padding="1rem">
-
-### 🗄️ Database tools
-
-- SQLite for local development
-- Connection URL formats for PostgreSQL, MySQL, and MariaDB
-- Named database connections
-- Database status and configuration diagnostics
-
-</td>
-<td width="50%" valign="top" padding="1rem">
-
-### 🎤 Built-in experiences
-
-- Command-line developer tools
-- Documentation and interactive demos
-- Development live reload
-- Live Markdown presentations with audience updates over SSE
-
-</td>
-</tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🧱 Application foundation</h3>
+      <ul>
+        <li>HTTP routing and middleware</li>
+        <li>Controllers, models, and views</li>
+        <li>Layouts and reusable template parts</li>
+        <li>Input parsing and validation</li>
+        <li>Database migrations and seed data</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🔐 Authentication &amp; security</h3>
+      <ul>
+        <li>Password hashing and server-side sessions</li>
+        <li>Roles and administrator tools</li>
+        <li>Optional TOTP two-factor authentication</li>
+        <li>CSRF and Origin checks</li>
+        <li>Security headers, rate limits, and SQL protections</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🗄️ Database tools</h3>
+      <ul>
+        <li>SQLite for local development</li>
+        <li>Connection URL formats for PostgreSQL, MySQL, and MariaDB</li>
+        <li>Named database connections</li>
+        <li>Database status and configuration diagnostics</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🎤 Built-in experiences</h3>
+      <ul>
+        <li>Command-line developer tools</li>
+        <li>Documentation and interactive demos</li>
+        <li>Development live reload</li>
+        <li>Live Markdown presentations with audience updates over SSE</li>
+      </ul>
+    </td>
+  </tr>
 </table>
 
 ## ✨ Get started
