@@ -1,6 +1,6 @@
 <div align="center">
 
-<p><strong>P.O.W.E.R. 2.0</strong></p>
+<img src="assets/power-banner.svg" alt="P.O.W.E.R. 2.0 — Node.js web framework banner" width="100%">
 <p><strong>⚡ Progressively Optimized Web Engine for Rendering</strong></p>
 <p>Build server-rendered web applications with a framework powered by Node.js built-ins.</p>
 
