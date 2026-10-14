@@ -1,193 +1,326 @@
-# P.O.W.E.R. — Progressively Optimized Web Engine for Rendering
+# P.O.W.E.R. 2.0
+### Progressively Optimized Web Engine for Rendering
 
-Zero-dependency web framework: Node.js ≥ 22.13 (built-ins only: `node:http(s)`, `node:fs`, `node:path`, `node:crypto`, `node:net/tls`, `node:sqlite`) + vanilla JS.
+**A zero-dependency Node.js web framework for server-rendered applications, with authentication, security controls, database tools, and real-time Markdown presentations built in.**
 
-```bash
-node bin/power-cli.js serve          # dev server: live reload + auto-restart (migrates + seeds on first boot)
-NODE_ENV=production SESSION_SECRET=$(node bin/power-cli.js key:generate | cut -d= -f2) node --disable-warning=ExperimentalWarning app.js
-npm test                             # 53 tests (+2 live-DB tests when TEST_PG_URL / TEST_MYSQL_URL are set)
-```
-First boot prints a one-time admin password (or set `POWER_ADMIN_EMAIL` / `POWER_ADMIN_PASSWORD`). Admin panel: `/admin`.
+[Repository](https://github.com/OrpanAp/power-2.0) · [Issues & bug reports](https://github.com/OrpanAp/power-2.0/issues)
 
-### View Available CLI Commands
+> **Status:** Active development. Review the known limitations and database-driver verification notes before using P.O.W.E.R. for production workloads.
 
-To list all available P.O.W.E.R. CLI commands and their usage, run:
+## Why P.O.W.E.R.?
 
-```bash
-node bin/power-cli.js help
-```
+P.O.W.E.R. is built with Node.js native modules and vanilla JavaScript rather than a third-party runtime framework. It brings common application features together so you can explore and build with routing, MVC structure, sessions, database migrations, environment configuration, and administration tools in one project.
 
-This displays the available commands for project setup, server management, database migrations, environment configuration, user administration, and presentation imports.
+- **No runtime package dependencies** — uses Node.js built-ins.
+- **MVC application structure** — routes, controllers, models, and views.
+- **Authentication and administration** — sessions, roles, user management, password reset, and optional two-factor authentication.
+- **Security-oriented defaults** — CSRF protection, output escaping, security headers, input limits, rate limiting, and prepared database queries.
+- **Multiple database engines** — SQLite, PostgreSQL, MySQL, and MariaDB connection formats, with support for named connections.
+- **Developer CLI and environment tools** — migrations, configuration validation, and key generation.
+- **Documentation and interactive demos** — built into the framework itself.
+- **Live Markdown presentations** — presenter controls and real-time audience updates over Server-Sent Events (SSE).
 
-## Documentation & demos (built with P.O.W.E.R. itself)
-Run the server and open:
-* `/` landing page · `/docs` **18 documentation pages** (search, table of contents, copy buttons, syntax highlighting; sources in `docs/*.md`)
-* `/demo` interactive demos: security lab (XSS / SQL-injection / validation / password policy), multi-database SQL generation,
-  Markdown + slides playground, live SSE stream, routing & middleware trace, error handling.
-The docs are tested against the code: every internal link must resolve and every documented CLI command and setting must exist.
-To add a page, create `docs/<slug>.md` and list it in `app/docs.js`.
+## Requirements
 
-## Environment configuration
-Layers (lowest → highest): `.env` → `.env.<mode>` → `.env.local` (skipped in test) → `.env.<mode>.local` → **real process environment**.
-`NODE_ENV` may itself live in `.env`. Values support quotes, `export`, multi-line `"…"`, `${VAR}`, `${VAR:-default}`, `\$` and inline `# comments`.
-```bash
-node bin/power-cli.js env:check [--env=production]   # validate; shows every setting, its source, secrets masked; exit 1 on errors
-node bin/power-cli.js env:set APP_NAME="My App"      # writes .env.local (0600) · env:get KEY [--reveal] · env:example
-node bin/power-cli.js key:generate --write           # SESSION_SECRET → .env.local
-```
-* **Typed + validated at boot:** bad `PORT`, missing/short `SESSION_SECRET` in production etc. are all reported together; typos in `.env` files get a "did you mean …?" hint.
-* **Secrets from files** (Docker/Kubernetes): `SESSION_SECRET_FILE=/run/secrets/session` (also `DB_URL_FILE`, `DB_<NAME>_URL_FILE`, `POWER_ADMIN_PASSWORD_FILE` …).
-* **Templates:** only `PUBLIC_*` variables are exposed → `{{ publicEnv.PUBLIC_ANALYTICS_ID }}`. In code: `import { env } from './config/env.js'` → `env('KEY', d)`, `env.int/bool/list/required`.
-* Never commit `.env`, `.env.local`, `.env.*.local` (the generated `.gitignore` covers them).
+- **Node.js 22.13.0 or newer**
+- npm (included with Node.js)
+- A terminal: PowerShell, Command Prompt, Bash, or a compatible shell
 
-## `.env` setup and database connection examples
+The framework has no runtime package dependencies. Running npm install is optional for this repository's current setup.
 
-The repository should contain **`.env.example`**, not your private `.env`. Create your local config by copying the template:
+## Quick start
 
-```bash
+### 1. Get the project
+
+~~~bash
+git clone https://github.com/OrpanAp/power-2.0.git
+cd power-2.0
+~~~
+
+Or download the repository as a ZIP from GitHub and extract it.
+
+### 2. Configure environment variables
+
+Copy the example environment file.
+
+**Windows PowerShell**
+~~~powershell
+Copy-Item .env.example .env
+~~~
+
+**macOS / Linux / Git Bash**
+~~~bash
 cp .env.example .env
-```
+~~~
 
-On Windows PowerShell, use `Copy-Item .env.example .env`. Edit `.env` and keep only one active `DB_URL` line. The provided default is local SQLite:
+The default configuration uses a local SQLite database:
 
-```dotenv
+~~~dotenv
+NODE_ENV=development
+HOST=127.0.0.1
+PORT=3000
 DB_URL=sqlite:storage/power.sqlite
-```
+~~~
 
-### Database URL formats
+You normally do not need to change the database setting to try the app locally.
 
-```dotenv
-# XAMPP MySQL/MariaDB: root account with an empty password
-DB_URL=mysql://<USERNAME>:<PASSWORD>@127.0.0.1:3306/<DATABASE_NAME>
+### 3. Start the development server
 
-# MySQL with a username and password
-DB_URL=mysql://<USERNAME>:<URL_ENCODED_PASSWORD>@127.0.0.1:3306/<DATABASE_NAME>
+~~~bash
+node bin/power-cli.js serve
+~~~
 
-# MariaDB
-DB_URL=mariadb://<USERNAME>:<URL_ENCODED_PASSWORD>@127.0.0.1:3306/<DATABASE_NAME>
+The development server supports live reload and automatic restart. On first boot, the app runs setup tasks and prints the initial administrator login details. Keep those details private and change the password after signing in.
 
-# PostgreSQL (either scheme is accepted)
-DB_URL=postgres://<USERNAME>:<URL_ENCODED_PASSWORD>@127.0.0.1:5432/<DATABASE_NAME>
-DB_URL=postgresql://<USERNAME>:<URL_ENCODED_PASSWORD>@127.0.0.1:5432/<DATABASE_NAME>
+Open these routes in your browser:
 
-# Hosted PostgreSQL with certificate verification
-DB_URL=postgres://<USERNAME>:<URL_ENCODED_PASSWORD>@<DB_HOST>:5432/<DATABASE_NAME>?sslmode=verify-full
+| Route | Purpose |
+| --- | --- |
+| / | Application landing page |
+| /docs | Framework documentation |
+| /demo | Interactive framework demos |
+| /admin | Administrator dashboard |
+| /presentations | Public presentations |
 
-# Hosted MySQL with TLS required
-DB_URL=mysql://<USERNAME>:<URL_ENCODED_PASSWORD>@<DB_HOST>:3306/<DATABASE_NAME>?ssl=true
-```
+The default local address is http://127.0.0.1:3000, unless you change HOST or PORT.
 
-**URL parts:** in `mysql://root:@127.0.0.1:3306/power`, `mysql://` selects the driver, `root` is the username, the empty part after `:` is the password, `127.0.0.1` is the database host, `3306` is the port, and `power` is the database name. Create the database on the server first; a connection URL does not create it automatically.
+### 4. Explore the CLI
 
-**Encode special characters** in usernames/passwords before putting them in a URL: `@` → `%40`, `:` → `%3A`, `/` → `%2F`, and `#` → `%23`. Do not commit real credentials. For remote databases, use the TLS option recommended by your database provider; `ssl=true` requires encryption but does not verify the server certificate, while `sslmode=verify-full` enables certificate/host verification.
+Show available commands and usage:
 
-Optional URL parameters include `pool=5`, `timeout=30000`, `ssl=true`, `sslmode=disable|require|verify-ca|verify-full`, and `sslca=/path/to/ca.pem`. Additional named connections can be configured with variables such as `DB_ANALYTICS_URL=postgres://...`; these do not replace the default `DB_URL`.
+~~~bash
+node bin/power-cli.js help
+~~~
 
-### Other environment settings
+Useful commands:
 
-All recognized settings and their defaults are documented inline in `.env.example`. Common settings include `NODE_ENV`, `APP_NAME`, `HOST`, `PORT`, `SESSION_SECRET`, `PASSWORD_PEPPER`, `SESSION_TTL_HOURS`, `SESSION_ABSOLUTE_HOURS`, `ALLOW_REGISTRATION`, `ALLOWED_HOSTS`, `FORCE_HTTPS`, `TLS_CERT`, `TLS_KEY`, rate limits, and presentation limits.
-
-Validate your configuration with:
-
-```bash
+~~~bash
 node bin/power-cli.js env:check
 node bin/power-cli.js db:check
 node bin/power-cli.js db:status
-```
+node bin/power-cli.js key:generate
+npm test
+~~~
 
-For production, set `NODE_ENV=production`, provide a strong `SESSION_SECRET` of at least 32 characters, set `ALLOWED_HOSTS`, configure HTTPS, and use a hosted database with TLS. Do not use local SQLite files or development credentials as your production database configuration without reviewing the deployment requirements.
+Use the CLI help output as the source of truth for commands supported by your checked-out version.
 
-## Live presentations
-Markdown decks stored in the database (any connection), presented live; the audience follows in real time over SSE.
-| URL | Who | What |
-|---|---|---|
-| `/admin/presentations` | admin | create/edit decks — editor with **live preview**, Ctrl/Cmd+S |
-| `/present/<slug>` | admin | presenter console: current + next slide, **speaker notes**, timer, viewer count, reaction totals, jump list; ← → Space Home End, `S` start, `Esc` end |
-| `/live/<slug>` | public deck: anyone · private: signed-in | audience view: follows the presenter, free browsing + **Return to live**, 👏❤️😮😂👍 reactions, fullscreen, swipe, works on phones |
-| `/presentations` | anyone | list of public decks (with LIVE badges) |
-Deck format: slides separated by `---`; `Notes:` starts presenter-only notes; optional first line `<!-- class: center dark accent big top -->`;
-themes `light | dark | contrast`; headings, lists, tables, quotes, code fences, links, same-origin/`data:` images. Slides scale with `cqw` units (16:9, no JS scaling).
-Editing a deck while it is live updates every viewer instantly; deleting it closes their streams. CLI: `presentation:import deck.md --slug=talk --public`.
-Security: Markdown is escaped first and only allow-listed URLs become links/images (no raw HTML, no `javascript:`); notes never reach audience endpoints;
-control endpoints are admin + CSRF; reactions are token-free but Origin-checked and rate-limited; per-IP/per-deck connection caps
-(`PRESENTATION_MAX_CONN_PER_IP`, `PRESENTATION_MAX_VIEWERS`). Live state is in memory (one process); a restart returns decks to "idle" and browsers reconnect automatically.
+## Features
+
+### Application development
+
+- HTTP routing with route parameters, route groups, and middleware
+- MVC-style controllers, models, routes, and server-rendered views
+- Template layouts, blocks, includes, conditionals, loops, and escaped output
+- Request parsing and input validation
+- Database migrations and seed data
+- Static assets and development live reload
+- Centralized logging and a health endpoint
+
+Example route:
+
+~~~js
+app.get('/users/:id', auth.requireAuth, (req, res) => {
+  res.json({ id: req.params.id });
+});
+~~~
+
+### Authentication and security
+
+P.O.W.E.R. includes multiple security controls, including:
+
+- Password hashing with scrypt and per-hash salts
+- Server-side sessions, session rotation, idle and absolute expiry
+- Role-based access control for administrators and users
+- Optional TOTP two-factor authentication and single-use backup codes
+- CSRF tokens and Origin checks
+- Login throttling and account lockout
+- Escaped template output, a Content Security Policy, and security headers
+- Prepared SQL statements and identifier validation
+- Request-size limits and protection against path traversal
+
+Security features reduce risk, but no framework can guarantee that an application is completely secure. Review the code, deployment setup, and threat model before production use.
+
+### Database support
+
+The framework includes connection URL formats and drivers for SQLite, PostgreSQL, MySQL, and MariaDB. SQLite is the default for local development. Set DB_URL in your .env file to select a database.
+
+~~~dotenv
+# SQLite
+DB_URL=sqlite:storage/power.sqlite
+
+# MySQL
+DB_URL=mysql://USER:URL_ENCODED_PASSWORD@127.0.0.1:3306/DATABASE
+
+# MariaDB
+DB_URL=mariadb://USER:URL_ENCODED_PASSWORD@127.0.0.1:3306/DATABASE
+
+# PostgreSQL
+DB_URL=postgres://USER:URL_ENCODED_PASSWORD@127.0.0.1:5432/DATABASE
+
+# Hosted PostgreSQL with certificate and host verification
+DB_URL=postgres://USER:URL_ENCODED_PASSWORD@DB_HOST:5432/DATABASE?sslmode=verify-full
+
+# Hosted MySQL with TLS enabled
+DB_URL=mysql://USER:URL_ENCODED_PASSWORD@DB_HOST:3306/DATABASE?ssl=true
+~~~
+
+**Important database notes**
+
+- Create the database on your database server before connecting; the URL does not create it.
+- URL-encode special characters in usernames and passwords (for example, @ becomes %40 and : becomes %3A).
+- For remote databases, follow your provider's TLS guidance. Encryption without certificate verification is not equivalent to verifying the server's identity.
+- Additional named connections can use variables such as DB_ANALYTICS_URL.
+- The PostgreSQL and MySQL drivers have been checked against protocol test vectors and fake protocol servers; run integration tests against your actual database before relying on those drivers in production.
+
+Run configuration and database diagnostics:
+
+~~~bash
+node bin/power-cli.js env:check
+node bin/power-cli.js db:check
+node bin/power-cli.js db:status
+~~~
+
+### Real-time Markdown presentations
+
+Create Markdown slide decks, present them live, and let audience browsers follow the presenter over SSE.
+
+| Route | Purpose |
+| --- | --- |
+| /admin/presentations | Create and edit presentation decks |
+| /present/:slug | Presenter console, speaker notes, timer, and slide controls |
+| /live/:slug | Audience view with live updates and reactions |
+| /presentations | Browse public decks |
+
+Separate slides with --- on its own line. Presenter notes can be introduced with Notes:. Decks support common Markdown content, themes, keyboard controls, and mobile-friendly viewing.
+
+Live presentation state is held in memory for a single process. After a restart, presentations return to idle; browsers reconnect automatically. Plan for this behavior when deploying.
+
+## Environment configuration
+
+P.O.W.E.R. loads environment settings in layers, from lower to higher priority:
+
+1. .env
+2. .env.<mode>
+3. .env.local (skipped in test mode)
+4. .env.<mode>.local
+5. Actual process environment variables
+
+Useful commands:
+
+~~~bash
+# Validate configuration and show where values came from
+node bin/power-cli.js env:check
+
+# Validate as production
+node bin/power-cli.js env:check --env=production
+
+# Generate a session secret
+node bin/power-cli.js key:generate
+
+# Write a generated secret to local environment configuration
+node bin/power-cli.js key:generate --write
+
+# Set a local environment value
+node bin/power-cli.js env:set APP_NAME="My App"
+~~~
+
+See [.env.example](.env.example) for recognized variables and defaults. Never commit .env, .env.local, or files containing real secrets or database credentials.
+
+## Production checklist
+
+Before exposing an application to the internet:
+
+- [ ] Set NODE_ENV=production.
+- [ ] Configure a strong SESSION_SECRET (at least 32 characters).
+- [ ] Set ALLOWED_HOSTS to the hostnames your application should accept.
+- [ ] Serve the application over HTTPS, using your hosting platform's TLS termination or supported TLS configuration.
+- [ ] Use a production database with the correct TLS settings and backups.
+- [ ] Set administrator credentials securely; do not reuse development passwords.
+- [ ] Review registration, rate limits, proxy settings, logs, and environment variables.
+- [ ] Run the test suite and database integration tests against the actual database engine.
+- [ ] Review the single-process limitations below before scaling to multiple instances.
+
+Production cookie settings require HTTPS. Do not treat a development server or local SQLite file as a production deployment plan.
+
+## Tests
+
+Run the project's test suite:
+
+~~~bash
+npm test
+~~~
+
+The standard suite includes smoke and security tests. Optional live database integration tests can be enabled by setting TEST_PG_URL and/or TEST_MYSQL_URL to test database URLs before running the suite:
+
+~~~bash
+TEST_PG_URL="postgres://..." TEST_MYSQL_URL="mysql://..." npm test
+~~~
+
+Use test databases only. Integration tests may create or modify database objects.
+
+## Project structure
+
+~~~text
+app.js                  Application entry point and middleware pipeline
+bin/power-cli.js        Command-line interface
+config/                 Environment loading and configuration
+core/                   Router, HTTP helpers, sessions, security, database, ORM,
+                        migrations, logging, health checks, static files, and more
+app/controllers/        Request controllers
+app/models/             Data models
+app/routes/             Route definitions
+app/views/              Server-rendered templates
+database/migrations/    Database migration files
+database/seed.js        Seed data
+docs/                   Markdown documentation pages
+public/                 Static CSS, JavaScript, and other assets
+tests/                  Automated tests
+~~~
+
+## Documentation and demos
+
+Start the server and visit /docs for framework documentation and /demo for interactive examples covering security checks, SQL generation, Markdown slides, streaming, routing/middleware traces, and error handling.
+
+Documentation sources are stored in docs/*.md. To add a page, create a Markdown file and register it in app/docs.js. The project includes checks for internal documentation links, CLI commands, and settings.
 
 ## Troubleshooting
-* **Can't remember the admin login?** `node bin/power-cli.js admin:info` lists admin accounts (and, in development, the password generated at first boot);
-  `node bin/power-cli.js user:reset-password [email]` sets a new one (default: first admin) and clears lockouts. In production passwords are never written to disk.
-  Every dev start also prints the login URL and admin email. Set your own first-boot credentials with `POWER_ADMIN_EMAIL` / `POWER_ADMIN_PASSWORD` (10+ chars) before the first run.
-* **403 "Request blocked" on login/logout:** the CSRF guard rejects a post only when the browser says it is cross-site (`Sec-Fetch-Site`) or `Origin` ≠ `Host`,
-  or when the form token is missing/stale (reload the page). Behind a proxy that rewrites `Host`, modern browsers still work; check the `system_logs` entry
-  "Request rejected by CSRF protection" for the exact reason. Don't open the app through an embedding iframe (frame-ancestors is `none`).
-* **Cookies not sticking in production over http:** production uses `__Host-` + `Secure` cookies and HSTS — serve over HTTPS (or `TLS_CERT`/`TLS_KEY`).
 
-## Databases (SQLite · PostgreSQL · MySQL/MariaDB · multiple at once)
-```
-DB_URL=sqlite:storage/power.sqlite                       # default connection
-DB_URL=postgres://user:pass@host:5432/app?sslmode=verify-full
-DB_URL=mysql://user:pass@host:3306/app?ssl=true
-DB_ANALYTICS_URL=postgres://...                          # any number of extra named connections
-```
-Options: `sslmode=disable|require|verify-ca|verify-full` (or `ssl=true`), `sslca=/path/ca.pem`, `pool=5`, `timeout=30000`.
-All drivers are implemented in this repo on top of `node:net`/`node:tls` (PostgreSQL v3 protocol with SCRAM-SHA-256; MySQL protocol with
-`mysql_native_password` / `caching_sha2_password`, server-side prepared statements). Queries always use `?` placeholders and bound parameters.
+**The server does not start**
+- Check your Node.js version with node --version; it must be 22.13.0 or newer.
+- Run node bin/power-cli.js help and follow the command usage for your version.
+- Run node bin/power-cli.js env:check to identify invalid or missing configuration.
 
-```js
-import { manager } from './core/database.js';
-const analytics = manager.connection('analytics');
-class Event extends Model { static table = 'events'; static connection = 'analytics'; }
-await db.transaction(async (tx) => { await tx.run('UPDATE ...', [..]); });   // use `tx`, never the global db, inside
-```
-Migrations are portable: `db.schema.createTable('posts', (t) => { t.id(); t.string('title', 120).notNull(); t.timestamps(); })`.
-Extra connections keep migrations in `database/migrations/<name>/` (`node bin/power-cli.js db:migrate --connection=analytics`).
-**Caveat:** the PostgreSQL and MySQL drivers are verified against RFC vectors and fake protocol servers only. Run
-`TEST_PG_URL=… TEST_MYSQL_URL=… npm test` against your real servers before relying on them. MySQL DDL is not transactional.
+**You lost the administrator login**
+- Run node bin/power-cli.js admin:info to inspect administrator accounts.
+- Use node bin/power-cli.js user:reset-password (or provide an email if supported by the command) to reset the password.
+- Set POWER_ADMIN_EMAIL and POWER_ADMIN_PASSWORD before the first boot if you want to choose initial credentials. Use a strong password and keep it private.
 
-## Security model (defence in depth — no framework can promise "completely secure")
-| Layer | What is implemented |
-|---|---|
-| Passwords | scrypt (N=2¹⁵), per-hash salt, optional `PASSWORD_PEPPER`, rehash-on-login, 10+ chars, blocklist + context checks |
-| Brute force | per-IP route limits, global limit, **per-account lockout with exponential back-off**, identical error for every failure, timing equalisation |
-| 2FA | TOTP (RFC 6238) with replay protection, 8 hashed single-use backup codes, secrets AES-256-GCM encrypted at rest; `REQUIRE_ADMIN_2FA=1` |
-| Sessions | server-side, HMAC-keyed ids, rotated on login/password/2FA change, idle **and** absolute timeouts, bound to User-Agent, revoke-all on password change, `__Host-` cookie in production |
-| CSRF / XSS | per-session token + Origin check; auto-escaped templates; strict CSP (no inline JS/CSS), nosniff, COOP/CORP/COEP, Referrer-Policy |
-| Transport | HSTS, `FORCE_HTTPS`, native TLS (`TLS_CERT`/`TLS_KEY`), `ALLOWED_HOSTS` host-header allow-list |
-| Input | size limits, depth/param-count limits, prototype-pollution keys dropped, control chars stripped, mass-assignment whitelists |
-| SQL | prepared statements only, validated identifiers, `LIKE` escaping; admin table browser masks secrets and protects `users`/`migrations` |
-| Files | traversal + symlink-escape protection, dotfiles blocked |
-| Ops | audit trail in `system_logs` (secrets redacted), `Cache-Control: no-store` on dynamic pages, minimal `/health` |
-Not covered: DDoS protection, WAF, secret management, multi-process rate limiting (use a reverse proxy / shared store), QR codes for 2FA (key shown as text).
+**Login or logout returns a 403**
+- Reload the page and retry in case the CSRF token expired.
+- Check that you are accessing the site through the expected hostname and scheme.
+- If a reverse proxy rewrites the host, check the application logs and proxy configuration. Do not disable CSRF protection as a workaround.
 
-## Layout
-```
-app.js                  boot + middleware pipeline
-bin/power-cli.js        CLI (init, serve, make:*, db:*, user:reset-password, key:generate)
-config/config.js        .env loader + settings
-core/                   router, server, http helpers, view engine, session, csrf, validator, security,
-                        database, model, migrator, livereload, health, logger, auth, static, body parser
-app/controllers|models|routes|views|auth.js
-database/migrations/    sortable <timestamp>_name.js with up(db)/down(db);  database/seed.js
-public/                 static assets (CSS/JS; no inline scripts – strict CSP)
-tests/                  node:test smoke + security tests
-```
+**Secure cookies are not saved over HTTP**
+- Production cookies are configured for HTTPS. Serve the site over HTTPS rather than weakening cookie settings.
 
-## Templates
-`<% extends "layouts/main" %>` · `<% block x %>…<% endblock %>` (`<% super %>` = parent default; blocks can't be nested) ·
-`{{ expr }}` escaped · `{{{ expr }}}` raw · `<include type="html" path="partials/x">` (`type="text"` inserts the file escaped) ·
-`<% if/elseif/else/endif %>` `<% unless %>` `<% for item[, i] in list %>…<% endfor %>`.
-Helpers: `fmtDate fmtBytes fmtUptime truncate json entries selected checked cap`; forms use `{{{ csrfField }}}`.
-Expressions are developer-authored code (evaluated with `new Function`) — never build templates from user input.
+**A remote database connection fails**
+- Confirm the database exists, credentials and URL encoding are correct, and the provider allows connections from your host.
+- Verify the required TLS mode and certificate settings.
+- Run node bin/power-cli.js db:check and test against a dedicated integration-test database.
 
-## Routing
-```js
-app.get('/users/:id', auth.requireAuth, (req, res) => res.json({ id: req.params.id }));
-app.group('/admin', [auth.requireRole('admin')], (r) => r.get('/', handler));
-app.use((err, req, res, next) => {...});          // error handler (4 args)
-```
-HTML forms can use `<input type="hidden" name="_method" value="DELETE">`.
+## Known limitations
 
-## Security notes
-scrypt password hashing · server-side sessions (HMAC-keyed ids, regenerated on login) · CSRF token + Origin check ·
-strict CSP & security headers · input sanitization (control chars, prototype-pollution keys) + auto-escaped output ·
-prepared statements only, identifiers whitelisted · login rate limiting · RBAC (`admin`, `user`).
-Limits: no multipart uploads, single-process in-memory rate limiter, SSE live reload is dev-only.
+- Live presentation state is in memory and designed for a single running process.
+- The built-in rate limiter is in memory and does not coordinate across multiple application processes.
+- Development live reload is not a production feature.
+- The framework does not currently provide multipart file uploads.
+- The PostgreSQL and MySQL drivers need to be tested against your actual server/version before production reliance.
+- This project does not replace deployment-level controls such as DDoS protection, a WAF, backups, monitoring, and secure secret management.
+
+## Contributing
+
+Bug reports, feature ideas, and improvements are welcome. Please [open an issue](https://github.com/OrpanAp/power-2.0/issues) with clear reproduction steps, expected behavior, and actual behavior. For code changes, include or update tests where practical and explain any security impact.
+
+## License
+
+Check the repository's [LICENSE file](LICENSE) for the terms that apply to this project.
