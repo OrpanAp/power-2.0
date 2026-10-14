@@ -122,7 +122,7 @@ P.O.W.E.R. includes controls such as:
 
 These features are useful building blocks, **not a guarantee that an application is secure**. Review the code and deployment configuration for your threat model.
 
-**🗄️ Database configuration**
+**⚙️ Database configuration**
 
 SQLite is the default for local development. Set `DB_URL` in your `.env` file to configure a database connection.
 
