@@ -1,0 +1,55 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container site<% endblock %>
+<% block content %>
+<h1>Security lab</h1>
+<p class="lead">Try to break it. Each box below calls a real endpoint that uses the framework's own sanitizer, validator and database layer.</p>
+<p class="alert info">Do not type a real password. The text is sent to this server to be checked and is not stored, but you should still never share real secrets with a demo.</p>
+
+<section class="panel" id="escape">
+  <h2>1 · XSS and SQL injection</h2>
+  <p>Enter a hostile string. See how output escaping, Markdown and a <b>bound SQL parameter</b> neutralise it.</p>
+  <div class="chips" id="payloads">
+    <button type="button" class="chip" data-v="&lt;script&gt;alert(1)&lt;/script&gt;">script tag</button>
+    <button type="button" class="chip" data-v="&lt;img src=x onerror=alert(1)&gt;">img onerror</button>
+    <button type="button" class="chip" data-v="[click me](javascript:alert(1))">javascript: link</button>
+    <button type="button" class="chip" data-v="' OR 1=1; DROP TABLE users; --">SQL injection</button>
+  </div>
+  <textarea id="esc-in" rows="2" maxlength="500" placeholder="Type or pick a payload"></textarea>
+  <div class="out-grid">
+    <div><div class="label">Escaped for HTML</div><pre id="esc-out" class="outbox"></pre></div>
+    <div><div class="label">Tags stripped</div><pre id="strip-out" class="outbox"></pre></div>
+    <div><div class="label">Rendered as Markdown (safe)</div><div id="md-out" class="outbox rendered"></div></div>
+    <div><div class="label">Real SQL query, run now</div><pre id="sql-out" class="outbox"></pre></div>
+  </div>
+</section>
+
+<section class="panel" id="validate">
+  <h2>2 · Validation</h2>
+  <p>Rules: <code>name: required|string|min:2|max:40</code> · <code>email: required|email</code> · <code>age: nullable|integer|between:13,120</code> · <code>role: in:admin,user</code> · <code>website: nullable|url</code></p>
+  <form id="vform" class="vgrid" autocomplete="off">
+    <label>Name<input name="name" value="A"></label>
+    <label>Email<input name="email" value="not-an-email"></label>
+    <label>Age<input name="age" value="12"></label>
+    <label>Role<input name="role" value="superuser"></label>
+    <label>Website<input name="website" value="javascript:alert(1)"></label>
+  </form>
+  <div id="v-out" class="outbox"></div>
+</section>
+
+<section class="panel" id="password">
+  <h2>3 · Password policy</h2>
+  <p>At least 10 characters, not common, no repetition, no sequences, must not contain your email name. No "symbol" rules.</p>
+  <input id="pw-in" type="text" autocomplete="off" maxlength="128" placeholder="Try: password1234, aaaaaaaaaaaa, correct horse battery staple">
+  <div id="pw-out" class="verdict">Type a password to check it.</div>
+</section>
+
+<section class="panel">
+  <h2>What else protects this page?</h2>
+  <ul class="ticks">
+    <li>These JSON calls are rate limited and origin-checked; they hold no state.</li>
+    <li>The CSP forbids inline scripts, so an injected <code>&lt;script&gt;</code> could not run even if it slipped through.</li>
+    <li>Read <a href="/docs/security">the security guide</a> and <a href="/docs/validation">validation docs</a>.</li>
+  </ul>
+</section>
+<% endblock %>
+<% block scripts %><script src="/js/demo-security.js" defer></script><% endblock %>

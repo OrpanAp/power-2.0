@@ -1,0 +1,15 @@
+<% extends "layouts/main" %> <% block content %>
+<div class="card narrow">
+  <h2>Two-factor authentication enabled</h2>
+  <p>
+    Store these one-time backup codes somewhere safe.
+    <b>They are shown only once.</b> Each code works a single time if you lose
+    your authenticator.
+  </p>
+  <pre class="stack">
+<% for c in codes %>{{ c }}
+<% endfor %></pre
+  >
+  <a class="btn" href="/account/security">Done</a>
+</div>
+<% endblock %>

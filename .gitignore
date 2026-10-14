@@ -1,0 +1,36 @@
+# Environment files: keep local credentials and secrets out of Git.
+.env
+.env.*
+!.env.example
+
+# Node / package-manager output
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local database files and development-only secrets (preserve locally; don't publish).
+storage/*.sqlite
+storage/*.sqlite3
+storage/*.db
+storage/.dev-secret
+storage/.sqlite-*
+storage/.db-
+
+# Logs and runtime output
+*.log
+logs/
+tmp/
+temp/
+
+# Coverage / test artifacts
+coverage/
+.nyc_output/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

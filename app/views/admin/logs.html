@@ -1,0 +1,25 @@
+<% extends "layouts/admin" %>
+<% block content %>
+<div class="toolbar">
+  <form method="get" action="/admin/logs" class="inline">
+    <select name="level">
+      <option value="">All levels</option>
+      <option value="info" {{{ selected(level, 'info') }}}>info</option>
+      <option value="warn" {{{ selected(level, 'warn') }}}>warn</option>
+      <option value="error" {{{ selected(level, 'error') }}}>error</option>
+      <option value="debug" {{{ selected(level, 'debug') }}}>debug</option>
+    </select>
+    <button class="btn small">Filter</button>
+  </form>
+  <form method="post" action="/admin/logs/purge" class="inline" data-confirm="Delete all logs older than 30 days?">{{{ csrfField }}}<button class="btn small danger">Purge &gt;30 days</button></form>
+</div>
+<table>
+  <thead><tr><th>ID</th><th>When</th><th>Level</th><th>Message</th><th>Context</th></tr></thead>
+  <tbody>
+  <% for l in logs %>
+    <tr><td>{{ l.id }}</td><td>{{ fmtDate(l.created_at) }}</td><td><span class="badge {{ l.level }}">{{ l.level }}</span></td><td>{{ l.message }}</td><td><code>{{ truncate(l.context, 90) }}</code></td></tr>
+  <% endfor %>
+  </tbody>
+</table>
+<include type="html" path="partials/pager">
+<% endblock %>

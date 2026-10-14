@@ -1,0 +1,96 @@
+<% extends "layouts/main" %>
+<% block mainclass %>site<% endblock %>
+<% block content %>
+<section class="hero2">
+  <span class="chip">0 dependencies · Node.js {{ facts.node }} · SQLite, PostgreSQL, MySQL</span>
+  <h1>Build secure, real-time web apps with <span class="grad">nothing but Node.js</span></h1>
+  <p class="lead">A complete framework in readable JavaScript: router, template engine, three database drivers, sessions, two-factor auth, live reload, an admin panel and live Markdown presentations. No <code>npm install</code>.</p>
+  <div class="cta">
+    <a class="btn big" href="/docs/quick-start">Get started</a>
+    <a class="btn big ghost" href="/demo">Try the live demos</a>
+    <% if live.status == 'live' %><a class="btn big live" href="/live/welcome">● Live now · {{ live.viewers }} watching</a><% else %><a class="btn big ghost" href="/live/welcome">Open the live deck</a><% endif %>
+  </div>
+  <div class="cmd" role="group" aria-label="Start command">
+    <code>node bin/power-cli.js serve</code>
+    <button class="copy" data-copy="node bin/power-cli.js serve" aria-label="Copy command">Copy</button>
+  </div>
+</section>
+
+<section class="stats" aria-label="Facts">
+  <div><b>{{ facts.deps }}</b><span>npm dependencies</span></div>
+  <div><b>{{ facts.coreFiles }}</b><span>framework files<br>({{ facts.coreLines }} lines, readable)</span></div>
+  <div><b>3</b><span>databases, several at once</span></div>
+  <div><b>{{ facts.routes }}</b><span>routes out of the box</span></div>
+  <div><b>{{ facts.docs }}</b><span>documentation pages</span></div>
+</section>
+
+<section>
+  <h2 class="sec">Everything in the box</h2>
+  <div class="features">
+    <a class="feat" href="/docs/routing"><i>🧭</i><h3>Router &amp; middleware</h3><p>Express-style routes, params, groups and chains, async-safe, with built-in static files.</p></a>
+    <a class="feat" href="/docs/templates"><i>🧩</i><h3>Template engine</h3><p>Inheritance, blocks, includes, auto-escaping and loops. Live DOM sync while you edit.</p></a>
+    <a class="feat" href="/docs/database"><i>🗄️</i><h3>SQLite · PostgreSQL · MySQL</h3><p>Native drivers, named connections, a portable schema builder, models and migrations.</p></a>
+    <a class="feat" href="/docs/authentication"><i>🔐</i><h3>Auth done properly</h3><p>scrypt, server-side sessions, RBAC, account lockout, TOTP two-factor and backup codes.</p></a>
+    <a class="feat" href="/docs/security"><i>🛡️</i><h3>Hardened by default</h3><p>Strict CSP, CSRF, host guard, rate limits, safe redirects, encrypted secrets.</p></a>
+    <a class="feat" href="/docs/validation"><i>✅</i><h3>Validation &amp; sanitization</h3><p>Async rules, custom rules, password policy, prototype-pollution-safe input.</p></a>
+    <a class="feat" href="/docs/presentations"><i>📽️</i><h3>Live presentations</h3><p>Markdown slides, presenter console with notes, audience follows in real time.</p></a>
+    <a class="feat" href="/docs/admin"><i>📊</i><h3>Admin dashboard</h3><p>Health metrics, user management, database browser and system logs.</p></a>
+    <a class="feat" href="/docs/live-reload"><i>⚡</i><h3>Live reload</h3><p>CSS hot-swap, soft DOM sync and auto-restart over Server-Sent Events.</p></a>
+    <a class="feat" href="/docs/configuration"><i>⚙️</i><h3>Typed configuration</h3><p>Layered <code>.env</code> files, validation at boot, <code>_FILE</code> secrets, public values.</p></a>
+    <a class="feat" href="/docs/cli"><i>🛠️</i><h3>CLI</h3><p>Generators, migrations, environment checks, admin recovery and deck import.</p></a>
+    <a class="feat" href="/docs/testing"><i>🧪</i><h3>Tested</h3><p>Security, database and protocol suites using only <code>node:test</code>.</p></a>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">See it work</h2>
+  <div class="demos">
+    <a class="demo" href="/demo/security"><h3>🔒 Security lab</h3><p>Throw XSS and SQL-injection payloads at it, validate a form, check a password. It runs the real code.</p></a>
+    <a class="demo" href="/demo/schema"><h3>🗄️ Multi-database</h3><p>One migration, three SQL dialects. See the exact statements generated for each.</p></a>
+    <a class="demo" href="/demo/markdown"><h3>📝 Markdown &amp; slides</h3><p>Type Markdown and watch the safe renderer, or turn it into slides.</p></a>
+    <a class="demo" href="/demo/live"><h3>📡 Live stream</h3><p>Server-Sent Events: server metrics pushed to your browser every second.</p></a>
+    <a class="demo" href="/demo/routing/42?color=blue"><h3>🧭 Routing</h3><p>Parameters, query strings and the middleware chain that handled the request.</p></a>
+    <a class="demo" href="/live/welcome"><h3>📽️ Live deck</h3><p>The seeded presentation. Open it on two devices and follow along.</p></a>
+  </div>
+</section>
+
+<section class="flow">
+  <h2 class="sec">One pipeline, every request</h2>
+  <img src="/img/request-flow.svg" alt="Request pipeline: headers, host guard, static files, rate limit, body parser, session, user, CSRF, router, controller, model and database, view" width="1000" height="360">
+  <p class="muted">Each step is a small, documented module in <code>core/</code>. Read <a href="/docs/project-structure">Project structure</a> to follow a request end to end.</p>
+</section>
+
+<section>
+  <h2 class="sec">Readable code</h2>
+  <div class="tabs">
+    <% for s, i in showcase %><input type="radio" name="tab" id="tab-{{ s.id }}" class="tab-{{ s.id }}" {{{ i == 0 ? 'checked' : '' }}}><% endfor %>
+    <div class="tab-labels">
+      <% for s in showcase %><label for="tab-{{ s.id }}">{{ s.label }}</label><% endfor %>
+    </div>
+    <div class="tab-panels">
+      <% for s in showcase %><pre class="code panel-{{ s.id }}" data-lang="{{ s.lang }}"><code>{{{ s.html }}}</code></pre><% endfor %>
+    </div>
+  </div>
+</section>
+
+<section class="secure">
+  <h2 class="sec">Secure by default, not by checklist</h2>
+  <ul class="ticks">
+    <li>Prepared statements only, on every database</li>
+    <li>Strict CSP with no inline scripts or styles</li>
+    <li>CSRF origin check plus per-session tokens</li>
+    <li>scrypt passwords with automatic rehash</li>
+    <li>Account lockout with exponential back-off</li>
+    <li>TOTP two-factor, secrets encrypted at rest</li>
+    <li>Session rotation, absolute timeouts, UA binding</li>
+    <li>Host allow-list, safe redirects, no raw HTML in Markdown</li>
+  </ul>
+  <p><a class="btn ghost" href="/docs/security">Read the security guide</a> <a class="btn ghost" href="/demo/security">Attack it yourself</a></p>
+</section>
+
+<section class="endcta">
+  <h2>Ready in about a minute</h2>
+  <p class="muted">Unzip, run one command, sign in with the credentials printed in the terminal.</p>
+  <p><a class="btn big" href="/docs/quick-start">Quick start</a> <a class="btn big ghost" href="/docs">Browse the docs</a></p>
+</section>
+<% endblock %>

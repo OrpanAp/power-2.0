@@ -1,0 +1,9 @@
+<% extends "layouts/main" %>
+<% block content %>
+<section class="hero">
+  <h1>{{ status }}</h1>
+  <p>{{ message }}</p>
+  <% if stack %><pre class="stack">{{ stack }}</pre><% endif %>
+  <p><a class="btn" href="/">Back home</a></p>
+</section>
+<% endblock %>

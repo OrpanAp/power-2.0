@@ -1,0 +1,23 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container docs-wrap<% endblock %>
+<% block content %>
+<div class="docs">
+  <aside class="dside">
+    <details class="mnav"><summary>Documentation menu</summary><include type="html" path="partials/docs-nav"></details>
+    <div class="dside-desktop"><include type="html" path="partials/docs-nav"></div>
+  </aside>
+  <article class="doc" id="doc">
+    <div class="crumbs"><a href="/docs">Docs</a> › {{ doc.group }}</div>
+    {{{ doc.html }}}
+    <nav class="pn" aria-label="Previous and next">
+      <% if prev %><a class="pn-prev" href="/docs/{{ prev.slug }}"><small>← Previous</small><span>{{ prev.title }}</span></a><% else %><span></span><% endif %>
+      <% if next %><a class="pn-next" href="/docs/{{ next.slug }}"><small>Next →</small><span>{{ next.title }}</span></a><% endif %>
+    </nav>
+  </article>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <% for h in doc.toc %><a href="#{{ h.id }}" class="toc-{{ h.level }}">{{ h.text }}</a><% endfor %>
+  </aside>
+</div>
+<% endblock %>
+<% block scripts %><script src="/js/docs.js" defer></script><% endblock %>

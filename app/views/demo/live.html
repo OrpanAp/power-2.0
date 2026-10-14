@@ -1,0 +1,26 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container site<% endblock %>
+<% block content %>
+<h1>Live stream demo</h1>
+<p class="lead">Your browser holds one open <b>Server-Sent Events</b> connection. Once a second the server pushes its metrics, with no polling. Open this page in two tabs and watch the viewer count.</p>
+<div class="stats live-stats" id="live-demo" data-src="/demo/stream">
+  <div><b id="m-status">connecting…</b><span>stream</span></div>
+  <div><b id="m-viewers">0</b><span>viewers</span></div>
+  <div><b id="m-uptime">-</b><span>server uptime</span></div>
+  <div><b id="m-rss">-</b><span>memory (RSS)</span></div>
+  <div><b id="m-req">-</b><span>requests served</span></div>
+</div>
+<section class="panel">
+  <h2>Server memory, last 60 seconds</h2>
+  <svg id="spark" viewBox="0 0 600 120" role="img" aria-label="Memory usage over the last minute" preserveAspectRatio="none">
+    <polyline id="spark-line" points="" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/>
+  </svg>
+  <p class="muted small">Range: <span id="m-range">-</span></p>
+</section>
+<section class="panel">
+  <h2>Live presentations use the same channel</h2>
+  <p>The seeded deck is <% if live.status == 'live' %><b class="livedot">● live right now</b><% else %>idle<% endif %>. A presenter's slide changes, reactions and the audience size are all pushed over SSE exactly like this stream.</p>
+  <p><a class="btn small" href="/live/welcome">Open the audience view</a> <a class="btn small ghost" href="/docs/presentations">How it works</a></p>
+</section>
+<% endblock %>
+<% block scripts %><script src="/js/demo-live.js" defer></script><% endblock %>

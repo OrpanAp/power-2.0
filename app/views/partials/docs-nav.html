@@ -1,0 +1,11 @@
+<form class="dsearch" method="get" action="/docs/search" role="search">
+  <input id="docsearch" name="q" value="{{ q }}" placeholder="Search docs  ( / )" aria-label="Search the documentation" autocomplete="off" maxlength="80">
+</form>
+<nav class="dnav" aria-label="Documentation">
+  <% for g in groups %>
+    <div class="dgroup">
+      <div class="dgroup-title">{{ g.group }}</div>
+      <% for p in g.pages %><a href="/docs/{{ p[0] }}" class="{{ p[0] == slug ? 'active' : '' }}" {{{ p[0] == slug ? 'aria-current="page"' : '' }}}>{{ p[1] }}</a><% endfor %>
+    </div>
+  <% endfor %>
+</nav>

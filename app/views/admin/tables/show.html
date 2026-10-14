@@ -1,0 +1,73 @@
+<% extends "layouts/admin" %> <% block content %>
+<p>
+  <a href="/admin/tables?conn={{ conn }}">← All tables ({{ conn }})</a> · {{
+  total }} rows<% unless canDelete %> ·
+  <span class="badge info">read-only</span><% endunless %>
+</p>
+<details class="card">
+  <summary>Schema</summary>
+  <table>
+    <thead>
+      <tr>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Not null</th>
+        <th>Default</th>
+        <th>PK</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for c in cols %>
+      <tr>
+        <td>{{ c.name }}</td>
+        <td>{{ c.type }}</td>
+        <td>{{ c.notnull ? 'yes' : '' }}</td>
+        <td>{{ c.default }}</td>
+        <td>{{ c.pk ? 'yes' : '' }}</td>
+      </tr>
+      <% endfor %>
+    </tbody>
+  </table>
+</details>
+<div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <% for c in cols %>
+        <th>
+          <a href="?conn={{ conn }}&sort={{ c.name }}&dir={{ nextDir }}"
+            >{{ c.name }}</a
+          >
+        </th>
+        <% endfor %> <% if canDelete %>
+        <th></th>
+        <% endif %>
+      </tr>
+    </thead>
+    <tbody>
+      <% for r in rows %>
+      <tr>
+        <% for c in r.cells %>
+        <td>{{ c.v }}</td>
+        <% endfor %> <% if canDelete %>
+        <td>
+          <form
+            method="post"
+            action="/admin/tables/{{ name }}/rows/{{ r.rid }}?conn={{ conn }}"
+            class="inline"
+            data-confirm="Delete this row permanently?"
+          >
+            {{{ csrfField }}}<input
+              type="hidden"
+              name="_method"
+              value="DELETE"
+            /><button class="btn small danger">Delete</button>
+          </form>
+        </td>
+        <% endif %>
+      </tr>
+      <% endfor %>
+    </tbody>
+  </table>
+</div>
+<include type="html" path="partials/pager"> <% endblock %> </include>

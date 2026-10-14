@@ -1,0 +1,28 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container site<% endblock %>
+<% block content %>
+<h1>Routing demo</h1>
+<p class="lead">This request matched the route <code>{{ data.pattern }}</code>. The router extracted the parameter, parsed the query string and ran a chain of middleware before the handler.</p>
+<div class="out-grid">
+  <section class="panel"><h2>Parameters</h2><pre class="outbox">{{ paramsJson }}</pre></section>
+  <section class="panel"><h2>Query string</h2><pre class="outbox">{{ queryJson }}</pre></section>
+</div>
+<section class="panel">
+  <h2>Middleware chain (in order)</h2>
+  <ol class="chain">
+    <% for t, i in data.trace %><li><code>{{ t.name }}</code> <span class="muted">at {{ t.ms }} ms</span></li><% endfor %>
+    <li><code>handler</code> <span class="muted">SiteController.routing</span></li>
+  </ol>
+  <p class="muted">Before these ran, every request already passed headers, host guard, static files, rate limit, body parser, session, user loading and CSRF. See <a href="/docs/project-structure">Project structure</a>.</p>
+</section>
+<section class="panel">
+  <h2>Try it</h2>
+  <p>
+    <a class="btn small ghost" href="/demo/routing/7?x=1">/demo/routing/7?x=1</a>
+    <a class="btn small ghost" href="/demo/routing/hello-world?lang=fr&amp;theme=dark">/demo/routing/hello-world?lang=fr&amp;theme=dark</a>
+    <a class="btn small ghost" href="/demo/routing/{{ data.params.id }}?format=json">same request as JSON</a>
+    <a class="btn small ghost" href="/demo/routing/bad%20id">invalid id (400)</a>
+    <a class="btn small ghost" href="/demo/teapot">error handler (418)</a>
+  </p>
+</section>
+<% endblock %>

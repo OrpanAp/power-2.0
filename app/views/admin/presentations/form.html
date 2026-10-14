@@ -1,0 +1,33 @@
+<% extends "layouts/admin" %>
+<% block content %>
+<form method="post" action="{{ action }}" id="editor" data-csrf="{{ csrfToken }}" data-theme="{{ old.theme || target.theme || 'light' }}">
+  {{{ csrfField }}}
+  <% if target %><input type="hidden" name="_method" value="PUT"><% endif %>
+  <div class="editor-grid">
+    <div>
+      <label for="title">Title</label>
+      <input id="title" name="title" value="{{ old.title || target.title }}" required>
+      <% if errors.title %><small class="err">{{ errors.title[0] }}</small><% endif %>
+      <div class="row">
+        <div><label for="slug">URL slug</label><input id="slug" name="slug" value="{{ old.slug || target.slug }}" placeholder="auto from title"><% if errors.slug %><small class="err">{{ errors.slug[0] }}</small><% endif %></div>
+        <div><label for="theme">Theme</label>
+          <select id="theme" name="theme"><% for t in themes %><option value="{{ t }}" {{{ selected(old.theme || target.theme || 'light', t) }}}>{{ t }}</option><% endfor %></select></div>
+      </div>
+      <label class="check"><input type="checkbox" name="is_public" value="1" {{{ checked(old.title ? old.is_public : (target ? target.is_public : true)) }}}> Public (anyone with the link can watch; otherwise signed-in users only)</label>
+      <label for="markdown">Slides (Markdown) — separate slides with <code>---</code>, speaker notes after <code>Notes:</code></label>
+      <textarea id="markdown" name="markdown" rows="22" spellcheck="false" required>{{ old.markdown || target.markdown || sample }}</textarea>
+      <% if errors.markdown %><small class="err">{{ errors.markdown[0] }}</small><% endif %>
+      <p><button class="btn" type="submit">Save</button>
+        <a class="btn ghost" href="/admin/presentations">Back</a>
+        <% if target %><a class="btn ghost" href="/present/{{ target.slug }}">Present ▶</a><% endif %></p>
+      <% if live.status == 'live' %><p class="muted">● This deck is live with {{ live.viewers }} viewer(s). Saving updates them instantly.</p><% endif %>
+    </div>
+    <div>
+      <div class="label">Live preview <span id="pcount" class="muted"></span></div>
+      <div id="preview" class="preview"></div>
+      <p id="perror" class="err"></p>
+    </div>
+  </div>
+</form>
+<script src="/js/editor.js" defer></script>
+<% endblock %>

@@ -1,0 +1,10 @@
+<% extends "layouts/main" %>
+<% block content %>
+<form method="post" action="/logout" class="card narrow">
+  <h2>Sign out?</h2>
+  <p class="muted">You are signed in as {{ user.email }}.</p>
+  {{{ csrfField }}}
+  <button class="btn" type="submit">Sign out</button>
+  <a class="btn ghost" href="/dashboard">Cancel</a>
+</form>
+<% endblock %>

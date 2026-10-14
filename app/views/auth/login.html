@@ -1,0 +1,15 @@
+<% extends "layouts/main" %>
+<% block content %>
+<form method="post" action="/login" class="card narrow">
+  <h2>Sign in</h2>
+  {{{ csrfField }}}
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" value="{{ old.email }}" autocomplete="username" required autofocus>
+  <% if errors.email %><small class="err">{{ errors.email[0] }}</small><% endif %>
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" required>
+  <% if errors.password %><small class="err">{{ errors.password[0] }}</small><% endif %>
+  <button class="btn" type="submit">Sign in</button>
+  <p class="muted">No account? <a href="/register">Register</a></p>
+</form>
+<% endblock %>

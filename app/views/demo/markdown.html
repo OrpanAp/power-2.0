@@ -1,0 +1,17 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container site wide2<% endblock %>
+<% block content %>
+<h1>Markdown &amp; slides playground</h1>
+<p class="lead">The same renderer that powers these docs and the live presentations. Raw HTML is escaped and only allow-listed URLs become links.</p>
+<div class="mdbar">
+  <label class="check"><input type="radio" name="mode" value="doc" checked> Document</label>
+  <label class="check"><input type="radio" name="mode" value="slides"> Slides (split on <code>---</code>)</label>
+  <span id="md-status" class="muted"></span>
+</div>
+<div class="editor-grid" id="mdplay">
+  <div><textarea id="md-in" rows="22" spellcheck="false" maxlength="20000">{{ sample }}</textarea></div>
+  <div><div id="md-view" class="doc mdview"></div></div>
+</div>
+<p class="muted">Try <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>, <code>![x](https://evil.example/a.png)</code> or <code>[x](javascript:alert(1))</code>. Create real decks in the <a href="/docs/presentations">presentation editor</a> (admins).</p>
+<% endblock %>
+<% block scripts %><script src="/js/demo-markdown.js" defer></script><% endblock %>

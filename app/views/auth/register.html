@@ -1,0 +1,21 @@
+<% extends "layouts/main" %>
+<% block content %>
+<form method="post" action="/register" class="card narrow">
+  <h2>Create account</h2>
+  {{{ csrfField }}}
+  <label for="name">Name</label>
+  <input id="name" name="name" value="{{ old.name }}" required>
+  <% if errors.name %><small class="err">{{ errors.name[0] }}</small><% endif %>
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" value="{{ old.email }}" required>
+  <% if errors.email %><small class="err">{{ errors.email[0] }}</small><% endif %>
+  <label for="password">Password (min 10)</label>
+  <input id="password" name="password" type="password" autocomplete="new-password" required>
+  <% if errors.password %><small class="err">{{ errors.password[0] }}</small><% endif %>
+  <label for="pc">Confirm password</label>
+  <input id="pc" name="password_confirmation" type="password" autocomplete="new-password" required>
+  <% if errors.password_confirmation %><small class="err">{{ errors.password_confirmation[0] }}</small><% endif %>
+  <button class="btn" type="submit">Create account</button>
+  <p class="muted">Already registered? <a href="/login">Sign in</a></p>
+</form>
+<% endblock %>

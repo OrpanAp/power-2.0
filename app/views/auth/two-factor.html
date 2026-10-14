@@ -1,0 +1,13 @@
+<% extends "layouts/main" %>
+<% block content %>
+<form method="post" action="/login/2fa" class="card narrow">
+  <h2>Two-factor authentication</h2>
+  <p class="muted">Enter the 6-digit code from your authenticator app, or one of your backup codes.</p>
+  {{{ csrfField }}}
+  <label for="code">Code</label>
+  <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" required autofocus>
+  <% if errors.code %><small class="err">{{ errors.code[0] }}</small><% endif %>
+  <button class="btn" type="submit">Verify</button>
+  <p class="muted"><a href="/login">Start over</a></p>
+</form>
+<% endblock %>

@@ -1,0 +1,26 @@
+<% extends "layouts/admin" %>
+<% block content %>
+<form method="post" action="{{ action }}" class="card narrow">
+  {{{ csrfField }}}
+  <% if target %><input type="hidden" name="_method" value="PUT"><% endif %>
+  <label for="name">Name</label>
+  <input id="name" name="name" value="{{ old.name || target.name }}" required>
+  <% if errors.name %><small class="err">{{ errors.name[0] }}</small><% endif %>
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" value="{{ old.email || target.email }}" required>
+  <% if errors.email %><small class="err">{{ errors.email[0] }}</small><% endif %>
+  <label for="role">Role</label>
+  <select id="role" name="role">
+    <option value="user" {{{ selected(old.role || target.role || 'user', 'user') }}}>user</option>
+    <option value="admin" {{{ selected(old.role || target.role, 'admin') }}}>admin</option>
+  </select>
+  <% if errors.role %><small class="err">{{ errors.role[0] }}</small><% endif %>
+  <label for="password"><% if target %>New password (leave blank to keep)<% else %>Password (min 10)<% endif %></label>
+  <input id="password" name="password" type="password" autocomplete="new-password">
+  <% if errors.password %><small class="err">{{ errors.password[0] }}</small><% endif %>
+  <label class="check"><input type="checkbox" name="is_active" value="1" {{{ checked(target ? target.is_active : true) }}}> Active</label>
+  <% if target %><label class="check"><input type="checkbox" name="unlock" value="1"> Clear lockout / failed logins</label><% endif %>
+  <button class="btn" type="submit">Save</button>
+  <a class="btn ghost" href="/admin/users">Cancel</a>
+</form>
+<% endblock %>

@@ -1,0 +1,120 @@
+<% extends "layouts/main" %> <% block content %>
+<h1>Account security</h1>
+
+<div class="grid">
+  <form method="post" action="/account/password" class="card">
+    <h3>Change password</h3>
+    {{{ csrfField }}}
+    <label for="cp">Current password</label>
+    <input
+      id="cp"
+      name="current_password"
+      type="password"
+      autocomplete="current-password"
+      required
+    />
+    <% if errors.current_password %><small class="err"
+      >{{ errors.current_password[0] }}</small
+    ><% endif %>
+    <label for="np">New password (min 10, not common)</label>
+    <input
+      id="np"
+      name="new_password"
+      type="password"
+      autocomplete="new-password"
+      required
+    />
+    <% if errors.new_password %><small class="err"
+      >{{ errors.new_password[0] }}</small
+    ><% endif %>
+    <label for="npc">Confirm new password</label>
+    <input
+      id="npc"
+      name="new_password_confirmation"
+      type="password"
+      autocomplete="new-password"
+      required
+    />
+    <% if errors.new_password_confirmation %><small class="err"
+      >{{ errors.new_password_confirmation[0] }}</small
+    ><% endif %>
+    <button class="btn" type="submit">Update password</button>
+    <p class="muted">Changing your password signs out all other devices.</p>
+  </form>
+
+  <div class="card">
+    <h3>Two-factor authentication (TOTP)</h3>
+    <% if totpEnabled %>
+    <p>
+      <span class="badge ok">enabled</span> · {{ backupLeft }} backup codes left
+    </p>
+    <form method="post" action="/account/2fa/disable">
+      {{{ csrfField }}}
+      <label for="dp">Password</label>
+      <input
+        id="dp"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      />
+      <% if errors.disable_password %><small class="err"
+        >{{ errors.disable_password[0] }}</small
+      ><% endif %>
+      <label for="dc">Authenticator or backup code</label>
+      <input id="dc" name="code" autocomplete="one-time-code" required />
+      <% if errors.disable_code %><small class="err"
+        >{{ errors.disable_code[0] }}</small
+      ><% endif %>
+      <button class="btn danger" type="submit">Disable 2FA</button>
+    </form>
+    <% elseif setupSecret %>
+    <p>
+      Add this key to your authenticator app (Google Authenticator, Aegis,
+      1Password, …) as a <b>time-based</b> account, then enter the 6-digit code.
+    </p>
+    <p>Key: <code>{{ setupSecret }}</code></p>
+    <p class="muted">
+      Or open on a device with an authenticator:
+      <code class="secret-key">{{ setupUri }}</code>
+    </p>
+    <form method="post" action="/account/2fa/enable">
+      {{{ csrfField }}}
+      <label for="ec">6-digit code</label>
+      <input
+        id="ec"
+        name="code"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        required
+      />
+      <% if errors.code %><small class="err">{{ errors.code[0] }}</small><%
+      endif %>
+      <button class="btn" type="submit">Confirm &amp; enable</button>
+    </form>
+    <% else %>
+    <p>
+      Protect your account with a code from an authenticator app in addition to
+      your password.
+    </p>
+    <form method="post" action="/account/2fa/start">
+      {{{ csrfField }}}<button class="btn" type="submit">Set up 2FA</button>
+    </form>
+    <% endif %>
+  </div>
+
+  <div class="card">
+    <h3>Sessions</h3>
+    <p class="muted">Sign out of every other browser or device.</p>
+    <form
+      method="post"
+      action="/account/sessions/revoke"
+      data-confirm="Sign out all other sessions?"
+    >
+      {{{ csrfField }}}<button class="btn ghost" type="submit">
+        Revoke other sessions
+      </button>
+    </form>
+  </div>
+</div>
+<% endblock %>

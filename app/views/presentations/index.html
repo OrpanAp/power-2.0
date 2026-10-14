@@ -1,0 +1,17 @@
+<% extends "layouts/main" %> <% block content %>
+<h1>Presentations</h1>
+<% if decks.length == 0 %>
+<p class="muted">No public presentations yet.</p>
+<% endif %>
+<div class="grid">
+  <% for d in decks %>
+  <a class="card deck-card" href="/live/{{ d.slug }}">
+    <h3>{{ d.title }}</h3>
+    <p class="muted">Updated {{ fmtDate(d.updated_at) }}</p>
+    <% if d.live.status == 'live' %><span class="badge ok"
+      >● LIVE · {{ d.live.viewers }} watching</span
+    ><% else %><span class="badge user">not live</span><% endif %>
+  </a>
+  <% endfor %>
+</div>
+<% endblock %>

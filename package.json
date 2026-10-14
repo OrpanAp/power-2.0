@@ -1,0 +1,21 @@
+{
+  "name": "power-framework",
+  "version": "1.0.0",
+  "description": "P.O.W.E.R. - Progressively Optimized Web Engine for Rendering. Zero-dependency Node.js framework.",
+  "type": "module",
+  "main": "app.js",
+  "bin": {
+    "power": "bin/power-cli.js"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning app.js",
+    "dev": "node bin/power-cli.js serve",
+    "migrate": "node bin/power-cli.js db:migrate",
+    "test": "node --disable-warning=ExperimentalWarning --test \"tests/*.test.js\""
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

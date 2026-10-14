@@ -1,0 +1,35 @@
+<% extends "layouts/admin" %> <% block content %>
+<div class="toolbar">
+  <div>
+    <% for c in conns %><a
+      class="btn small {{ c.name == conn ? '' : 'ghost' }}"
+      href="/admin/tables?conn={{ c.name }}"
+      >{{ c.name }} <small>({{ c.driver }})</small></a
+    >
+    <% endfor %>
+  </div>
+</div>
+<p class="muted">
+  Connection <b>{{ conn }}</b> · {{ driver }} · <code>{{ target }}</code>
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Table</th>
+      <th>Rows</th>
+      <th>Columns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for t in tables %>
+    <tr>
+      <td>
+        <a href="/admin/tables/{{ t.name }}?conn={{ conn }}">{{ t.name }}</a>
+      </td>
+      <td>{{ t.rows }}</td>
+      <td>{{ t.cols }}</td>
+    </tr>
+    <% endfor %>
+  </tbody>
+</table>
+<% endblock %>

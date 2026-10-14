@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><% block title %>{{ title }} · {{ appName }}<% endblock %></title>
+  <meta name="description" content="{{ description || 'P.O.W.E.R. - a zero-dependency, secure, real-time web framework for Node.js.' }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/presentation.css">
+  <link rel="stylesheet" href="/css/site.css">
+  {{{ liveReload }}}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav">
+    <a class="brand" href="/">⚡ {{ appName }}</a>
+    <nav aria-label="Main">
+      <a href="/docs" class="{{ path == '/docs' || path.startsWith('/docs/') ? 'cur' : '' }}">Docs</a>
+      <a href="/demo" class="{{ path == '/demo' || path.startsWith('/demo/') ? 'cur' : '' }}">Demo</a>
+      <a href="/presentations">Presentations</a>
+      <% if user %>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/account/security">Account</a>
+        <% if user.role == 'admin' %><a href="/admin">Admin</a><% endif %>
+        <form method="post" action="/logout" class="inline">{{{ csrfField }}}<button class="link">Sign out ({{ user.name }})</button></form>
+      <% else %>
+        <a href="/login">Sign in</a>
+        <a class="btn small" href="/register">Register</a>
+      <% endif %>
+    </nav>
+  </header>
+  <main id="main" class="<% block mainclass %>container<% endblock %>">
+    <include type="html" path="partials/flash">
+    <% block content %><% endblock %>
+  </main>
+  <footer class="foot">
+    <div class="foot-grid">
+      <div><b>⚡ P.O.W.E.R.</b><br><span class="muted">Progressively Optimized Web Engine for Rendering. Zero dependencies.</span></div>
+      <div><b>Learn</b><br><a href="/docs/quick-start">Quick start</a><br><a href="/docs/security">Security guide</a><br><a href="/docs/cli">CLI reference</a></div>
+      <div><b>Try</b><br><a href="/demo">Interactive demos</a><br><a href="/live/welcome">Live presentation</a><br><a href="/docs/deployment">Deployment</a></div>
+    </div>
+  </footer>
+  <script src="/js/app.js" defer></script>
+  <% block scripts %><% endblock %>
+</body>
+</html>

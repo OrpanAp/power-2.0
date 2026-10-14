@@ -1,0 +1,7 @@
+<% if pager.pages > 1 %>
+<div class="pager">
+  <% if pager.prev %><a class="btn small ghost" href="{{ pager.prev }}">← Prev</a><% endif %>
+  <span>Page {{ pager.page }} of {{ pager.pages }} · {{ pager.total }} rows</span>
+  <% if pager.next %><a class="btn small ghost" href="{{ pager.next }}">Next →</a><% endif %>
+</div>
+<% endif %>

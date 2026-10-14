@@ -1,0 +1,65 @@
+<% extends "layouts/admin" %> <% block content %>
+<div class="toolbar">
+  <span class="muted"
+    >Markdown decks, presented live over Server-Sent Events.</span
+  ><a class="btn small" href="/admin/presentations/new">+ New presentation</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Slug</th>
+      <th>Access</th>
+      <th>Status</th>
+      <th>Updated</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for d in decks %>
+    <tr>
+      <td>{{ d.title }}</td>
+      <td><code>{{ d.slug }}</code></td>
+      <td>
+        <% if d.is_public %><span class="badge ok">public</span><% else %><span
+          class="badge user"
+          >members</span
+        ><% endif %>
+      </td>
+      <td>
+        <% if d.live.status == 'live' %><span class="badge ok"
+          >● live · {{ d.live.viewers }}</span
+        ><% else %><span class="badge user">{{ d.live.status }}</span><% endif
+        %>
+      </td>
+      <td>{{ fmtDate(d.updated_at) }}</td>
+      <td class="actions">
+        <a class="btn small" href="/present/{{ d.slug }}">Present</a>
+        <a
+          class="btn small ghost"
+          href="/live/{{ d.slug }}"
+          target="_blank"
+          rel="noopener"
+          >Audience</a
+        >
+        <a class="btn small ghost" href="/admin/presentations/{{ d.id }}/edit"
+          >Edit</a
+        >
+        <form
+          method="post"
+          action="/admin/presentations/{{ d.id }}"
+          class="inline"
+          data-confirm="Delete “{{ d.title }}”?"
+        >
+          {{{ csrfField }}}<input
+            type="hidden"
+            name="_method"
+            value="DELETE"
+          /><button class="btn small danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    <% endfor %>
+  </tbody>
+</table>
+<% endblock %>

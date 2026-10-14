@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf" content="{{ csrfToken }}" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/presentation.css" />
+    {{{ liveReload }}}
+  </head>
+  <body class="pres presenter theme-{{ deck.theme }}" data-no-sync>
+    <div id="presenter" data-slug="{{ deck.slug }}" data-state="{{ state }}">
+      <header class="pbar">
+        <a href="/admin/presentations" class="ptitle">← {{ deck.title }}</a>
+        <span id="status" class="pill idle">idle</span>
+        <span id="timer" class="timer">00:00</span>
+        <span class="viewers" title="Watching now"
+          >👁 <span id="viewers">0</span></span
+        >
+        <a
+          class="btn small ghost"
+          href="/live/{{ deck.slug }}"
+          target="_blank"
+          rel="noopener"
+          >Audience view ↗</a
+        >
+        <button id="start" class="btn small">Start</button>
+        <button id="end" class="btn small danger" hidden>End</button>
+      </header>
+
+      <div class="pgrid">
+        <section class="pcol">
+          <div class="label">Current slide <span id="idx"></span></div>
+          <div class="stage theme-{{ deck.theme }}">
+            <div id="cur" class="slidehost"></div>
+          </div>
+          <div class="label">Next</div>
+          <div class="stage small theme-{{ deck.theme }}">
+            <div id="nxt" class="slidehost"></div>
+          </div>
+        </section>
+        <aside class="pcol">
+          <div class="label">Speaker notes</div>
+          <div id="notes" class="notes"></div>
+          <div class="label">Audience reactions</div>
+          <div id="react" class="react-totals"></div>
+          <div class="label">Jump to</div>
+          <ol id="jump" class="jump">
+            <% for s, i in slides %>
+            <li>
+              <button class="jumpbtn" data-i="{{ i }}">
+                {{ i + 1 }}. {{ truncate(s.text, 40) }}
+              </button>
+            </li>
+            <% endfor %>
+          </ol>
+          <p class="muted small">
+            ← → / Space · Home / End · S start · Esc end
+          </p>
+        </aside>
+      </div>
+
+      <div id="deck" hidden>
+        <% for s, i in slides %>
+        <section class="slide {{ s.classes }}" data-i="{{ i }}">
+          {{{ s.html }}}
+        </section>
+        <div class="slide-notes" data-i="{{ i }}">{{{ s.notes }}}</div>
+        <% endfor %>
+      </div>
+    </div>
+    <script src="/js/presenter.js" defer></script>
+  </body>
+</html>

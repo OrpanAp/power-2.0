@@ -1,0 +1,60 @@
+<% extends "layouts/admin" %> <% block content %>
+<div class="toolbar">
+  <form method="get" action="/admin/users" class="inline">
+    <input name="q" value="{{ q }}" placeholder="Search name or email" /><button
+      class="btn small"
+    >
+      Search
+    </button>
+  </form>
+  <a class="btn small" href="/admin/users/new">+ New user</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Last sign-in</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for u in users %>
+    <tr>
+      <td>{{ u.id }}</td>
+      <td>{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td><span class="badge {{ u.role }}">{{ u.role }}</span></td>
+      <td>
+        <% if u.is_active %><span class="badge ok">active</span><% else %><span
+          class="badge error"
+          >disabled</span
+        ><% endif %> <% if u.locked_until > now %><span class="badge warn"
+          >locked</span
+        ><% endif %> <% if u.totp_enabled %><span class="badge info">2FA</span
+        ><% endif %>
+      </td>
+      <td>{{ fmtDate(u.last_login_at) }}</td>
+      <td class="actions">
+        <a class="btn small ghost" href="/admin/users/{{ u.id }}/edit">Edit</a>
+        <form
+          method="post"
+          action="/admin/users/{{ u.id }}"
+          class="inline"
+          data-confirm="Delete {{ u.email }}?"
+        >
+          {{{ csrfField }}}<input
+            type="hidden"
+            name="_method"
+            value="DELETE"
+          /><button class="btn small danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    <% endfor %>
+  </tbody>
+</table>
+<include type="html" path="partials/pager"> <% endblock %> </include>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }} · Live</title>
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/presentation.css" />
+    {{{ liveReload }}}
+  </head>
+  <body class="pres theme-{{ deck.theme }}" data-no-sync>
+    <div id="live" data-slug="{{ deck.slug }}" data-state="{{ state }}">
+      <header class="pbar">
+        <a href="/presentations" class="ptitle">{{ title }}</a>
+        <span id="status" class="pill idle">Connecting…</span>
+        <span class="viewers" title="Watching now"
+          >👁 <span id="viewers">0</span></span
+        >
+      </header>
+      <div id="stage" class="stage theme-{{ deck.theme }}">
+        <div id="deck">
+          <% for s in slides %>
+          <section class="slide {{ s.classes }}">{{{ s.html }}}</section>
+          <% endfor %>
+        </div>
+        <div id="overlay" class="overlay" hidden>
+          Waiting for the presenter to start…
+        </div>
+      </div>
+      <progress id="bar" max="100" value="0"></progress>
+      <footer class="pcontrols">
+        <button id="prev" class="btn small ghost" aria-label="Previous slide">
+          ←
+        </button>
+        <span id="counter">1 / 1</span>
+        <button id="next" class="btn small ghost" aria-label="Next slide">
+          →
+        </button>
+        <button id="resume" class="btn small" hidden>Return to live</button>
+        <span class="spacer"></span>
+        <span class="reactions">
+          <button class="react" data-kind="clap" aria-label="Clap">👏</button>
+          <button class="react" data-kind="heart" aria-label="Love">❤️</button>
+          <button class="react" data-kind="wow" aria-label="Wow">😮</button>
+          <button class="react" data-kind="laugh" aria-label="Laugh">😂</button>
+          <button class="react" data-kind="thumbs" aria-label="Thumbs up">
+            👍
+          </button>
+        </span>
+        <button id="fs" class="btn small ghost" aria-label="Fullscreen">
+          ⛶
+        </button>
+      </footer>
+    </div>
+    <script src="/js/live.js" defer></script>
+  </body>
+</html>

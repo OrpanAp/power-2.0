@@ -1,0 +1,24 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container docs-wrap<% endblock %>
+<% block content %>
+<div class="docs docs-search">
+  <aside class="dside">
+    <details class="mnav"><summary>Documentation menu</summary><include type="html" path="partials/docs-nav"></details>
+    <div class="dside-desktop"><include type="html" path="partials/docs-nav"></div>
+  </aside>
+  <section class="doc">
+    <h1>Search the docs</h1>
+    <% if q.length < 2 %>
+      <p class="muted">Type at least two characters.</p>
+    <% elseif results.length == 0 %>
+      <p>No results for <b>{{ q }}</b>. Try a shorter or different word, or browse the menu.</p>
+    <% else %>
+      <p class="muted">{{ results.length }} result(s) for <b>{{ q }}</b></p>
+      <% for r in results %>
+        <a class="hit" href="/docs/{{ r.slug }}"><span class="hit-group">{{ r.group }}</span><b>{{ r.title }}</b><p>{{{ r.snippet }}}</p></a>
+      <% endfor %>
+    <% endif %>
+  </section>
+</div>
+<% endblock %>
+<% block scripts %><script src="/js/docs.js" defer></script><% endblock %>

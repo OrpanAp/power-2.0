@@ -1,0 +1,16 @@
+<% extends "layouts/main" %>
+<% block mainclass %>container site<% endblock %>
+<% block content %>
+<h1>Interactive demos</h1>
+<p class="lead">Everything here runs the real framework code on this server. Nothing is mocked, and nothing you type is stored.</p>
+<div class="demos">
+  <a class="demo" href="/demo/security"><h3>🔒 Security lab</h3><p>XSS and SQL-injection payloads, form validation and the password policy, live.</p><span class="tag">validator · escaping · prepared statements</span></a>
+  <a class="demo" href="/demo/schema"><h3>🗄️ Multi-database</h3><p>The same migration and queries, as generated for SQLite, PostgreSQL and MySQL.</p><span class="tag">schema builder · drivers</span></a>
+  <a class="demo" href="/demo/markdown"><h3>📝 Markdown &amp; slides</h3><p>The safe Markdown renderer and the deck parser, side by side.</p><span class="tag">renderer · decks</span></a>
+  <a class="demo" href="/demo/live"><h3>📡 Live stream</h3><p>Server metrics pushed to every viewer once a second over Server-Sent Events.</p><span class="tag">SSE · real time</span></a>
+  <a class="demo" href="/demo/routing/42?color=blue&amp;lang=en"><h3>🧭 Routing &amp; middleware</h3><p>See parameters, the query string and the chain of middleware for one request.</p><span class="tag">router</span></a>
+  <a class="demo" href="/live/welcome"><h3>📽️ Live presentation</h3><p>Audience view of the seeded deck<% if live.status == 'live' %> — <b class="livedot">● live now</b><% endif %>. Admins can present it.</p><span class="tag">presentations</span></a>
+  <a class="demo" href="/demo/teapot"><h3>🫖 Error handling</h3><p>Trigger a 418 and see the framework's error page.</p><span class="tag">HttpError</span></a>
+  <a class="demo" href="/login"><h3>🔑 Sign in</h3><p>Try login, lockout and two-factor with your own account. Admin credentials come from the terminal.</p><span class="tag">auth</span></a>
+</div>
+<% endblock %>

@@ -1,0 +1,125 @@
+<% extends "layouts/admin" %> <% block content %>
+<div class="stats">
+  <div class="stat">
+    <b>{{ stats.users }}</b><span>Users ({{ stats.admins }} admin)</span>
+  </div>
+  <div class="stat"><b>{{ stats.sessions }}</b><span>Live sessions</span></div>
+  <div class="stat"><b>{{ stats.logs }}</b><span>Log entries</span></div>
+  <div class="stat"><b>{{ stats.errors24h }}</b><span>Errors (24h)</span></div>
+  <div class="stat"><b>{{ stats.warns24h }}</b><span>Warnings (24h)</span></div>
+  <div class="stat"><b>{{ stats.mfa }}</b><span>Users with 2FA</span></div>
+  <div class="stat"><b>{{ stats.locked }}</b><span>Locked accounts</span></div>
+</div>
+
+<h2>System health <small class="muted">auto-refreshing</small></h2>
+<div class="grid">
+  <div class="card">
+    <h3>Process</h3>
+    <dl class="kv">
+      <dt>Status</dt>
+      <dd>
+        <span class="badge ok" data-metric="status">{{ health.status }}</span>
+      </dd>
+      <dt>Uptime</dt>
+      <dd data-metric="uptime" data-format="uptime">
+        {{ fmtUptime(health.uptime) }}
+      </dd>
+      <dt>Node</dt>
+      <dd>{{ health.node }} · {{ health.platform }}</dd>
+      <dt>Environment</dt>
+      <dd>{{ health.env }} (pid {{ health.pid }})</dd>
+      <dt>Event loop (p99)</dt>
+      <dd data-metric="eventLoop.p99Ms" data-format="ms">
+        {{ health.eventLoop.p99Ms }} ms
+      </dd>
+    </dl>
+  </div>
+  <div class="card">
+    <h3>Memory</h3>
+    <dl class="kv">
+      <dt>RSS</dt>
+      <dd data-metric="memory.rss" data-format="bytes">
+        {{ fmtBytes(health.memory.rss) }}
+      </dd>
+      <dt>Heap</dt>
+      <dd>
+        <span data-metric="memory.heapUsed" data-format="bytes"
+          >{{ fmtBytes(health.memory.heapUsed) }}</span
+        >
+        /
+        <span data-metric="memory.heapTotal" data-format="bytes"
+          >{{ fmtBytes(health.memory.heapTotal) }}</span
+        >
+      </dd>
+    </dl>
+    <progress
+      max="100"
+      value="{{ health.memory.heapPct }}"
+      data-metric="memory.heapPct"
+    ></progress>
+    <dl class="kv">
+      <dt>System RAM used</dt>
+      <dd data-metric="system.usedPct" data-format="pct">
+        {{ health.system.usedPct }}%
+      </dd>
+      <dt>Load avg</dt>
+      <dd data-metric="system.load" data-format="list">
+        {{ health.system.load[0] }}, {{ health.system.load[1] }}, {{
+        health.system.load[2] }}
+      </dd>
+    </dl>
+    <progress
+      max="100"
+      value="{{ health.system.usedPct }}"
+      data-metric="system.usedPct"
+    ></progress>
+  </div>
+  <div class="card">
+    <h3>Database &amp; HTTP</h3>
+    <dl class="kv">
+      <dt>Default DB</dt>
+      <dd>
+        {{ health.database.driver }} · {{ health.database.tables }} tables<% if
+        health.database.sizeBytes %> · {{ fmtBytes(health.database.sizeBytes)
+        }}<% endif %>
+      </dd>
+      <% for c in health.database.connections %>
+      <dt>{{ c.name }}</dt>
+      <dd>
+        <span class="badge {{ c.ok ? 'ok' : 'error' }}"
+          >{{ c.driver }} · {{ c.ok ? 'up' : 'down' }}</span
+        >
+      </dd>
+      <% endfor %>
+      <dt>Requests</dt>
+      <dd data-metric="http.requests">{{ health.http.requests }}</dd>
+      <dt>5xx errors</dt>
+      <dd data-metric="http.errors">{{ health.http.errors }}</dd>
+      <dt>Avg response</dt>
+      <dd data-metric="http.avgMs" data-format="ms">
+        {{ health.http.avgMs }} ms
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<h2>Recent activity</h2>
+<table>
+  <thead>
+    <tr>
+      <th>When</th>
+      <th>Level</th>
+      <th>Message</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for l in recent %>
+    <tr>
+      <td>{{ fmtDate(l.created_at) }}</td>
+      <td><span class="badge {{ l.level }}">{{ l.level }}</span></td>
+      <td>{{ l.message }}</td>
+    </tr>
+    <% endfor %>
+  </tbody>
+</table>
+<% endblock %>
