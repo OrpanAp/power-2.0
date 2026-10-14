@@ -107,7 +107,7 @@ app.get('/users/:id', auth.requireAuth, (req, res) => {
 
 Adapt examples to the APIs available in the version checked out from your repository.
 
-**Security-focused building blocks**
+**🗝️ Security-focused building blocks**
 
 P.O.W.E.R. includes controls such as:
 
@@ -122,7 +122,7 @@ P.O.W.E.R. includes controls such as:
 
 These features are useful building blocks, **not a guarantee that an application is secure**. Review the code and deployment configuration for your threat model.
 
-**Database configuration**
+**🗄️ Database configuration**
 
 SQLite is the default for local development. Set `DB_URL` in your `.env` file to configure a database connection.
 
@@ -149,7 +149,7 @@ Before connecting to a remote database:
 
 The PostgreSQL and MySQL drivers should be verified against your actual server before production use.
 
-**Live Markdown presentations**
+**🪩 Live Markdown presentations**
 
 Create Markdown slide decks and present them to an audience with real-time updates over Server-Sent Events (SSE).
 
