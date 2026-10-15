@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-see%20LICENSE-64748b)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/OrpanAp/power-2.0?color=8b5cf6)](https://github.com/OrpanAp/power-2.0/issues)
 
-[🌐 Live Demo](https://orpanap.github.io/Custom-web-templating-framework--Power-Engine--simplified/) · [📦 Source Code](https://github.com/OrpanAp/Custom-web-templating-framework--Power-Engine--simplified) · [🚀 P.O.W.E.R. 2.0](https://github.com/OrpanAp/power-2.0)
+[🌐 Live Demo](https://orpanap.github.io/Custom-web-templating-framework--Power-Engine--simplified/) · [🚀 P.O.W.E.R. 2.0](https://github.com/OrpanAp/Custom-web-templating-framework--Power-Engine--simplified) · [📦 Source Code](https://github.com/OrpanAp/power-2.0)
 
 [🚀 Get started](#-get-started) · [✨ Features](#-what-you-get) · [📚 Documentation](#-documentation--demos) · [🐛 Report a bug](https://github.com/OrpanAp/power-2.0/issues)
 
